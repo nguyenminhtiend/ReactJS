@@ -1,8 +1,16 @@
-﻿var employees = [{name: 'Messi', department: 'IT', phone: '12345678'}];
+﻿var employees = [{id: new Date().getTime(), name: 'Messi', department: 'IT', phone: '12345678'}];
 
 var Cell = React.createClass({   
     render: function () {
         return <td>{this.props.data}</td>
+    }
+});
+
+var CellAction = React.createClass({   
+    render: function () {
+        return <td><button type="button" className="btn btn-danger btn-xs" onClick={this.props.onDelete(null, this)}>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
+        </button></td>
     }
 });
 
@@ -18,6 +26,7 @@ var Row = React.createClass({
             <Cell data={this.props.data.name} />
             <Cell data={this.props.data.department} />
             <Cell data={this.props.data.phone} />
+            <CellAction data={this.props.data.id} onDelete={this.props.onDelete} />
         </tr>);
     }
 });
@@ -28,6 +37,7 @@ var HeaderTable = React.createClass({
             <CellHeader data={this.props.data.name} />
             <CellHeader data={this.props.data.department} />
             <CellHeader data={this.props.data.phone} />
+            <CellHeader data={this.props.data.action} />
         </tr></thead>);
 }
 });
@@ -37,14 +47,15 @@ var Grid = React.createClass({
         var dataHeader = {
             name: 'Name',
             department: 'Department',
-            phone: 'Phone'
+            phone: 'Phone',
+            action: 'Action'
         };
 
         var header = (<HeaderTable data={dataHeader} />);
 
         var body =  (<tbody>{
             this.props.data.map(function (rowData, index) {
-                return <Row key={index} data={rowData} />;
+                return <Row key={index} data={rowData} onDelete={this.deleteEmployee} />;
             })}</tbody>);
 
         return (<div>
@@ -53,7 +64,11 @@ var Grid = React.createClass({
                     </table>
                 </div>
             );
+    },
+    deleteEmployee: function(component, event) {
+        console.log(component.props.data);
     }
+
 });
 
 var EmloyeeForm = React.createClass({
@@ -87,7 +102,13 @@ var EmloyeeForm = React.createClass({
             department: this.refs.department.getDOMNode().value,
             phone: this.refs.phone.getDOMNode().value
         };
+    },
+    clearData: function() {
+        this.refs.name.getDOMNode().value = '';
+        this.refs.department.getDOMNode().value = '';
+        this.refs.phone.getDOMNode().value = '';    
     }
+
 });
 
 var App = React.createClass({   
@@ -102,12 +123,19 @@ var App = React.createClass({
                 <div className="pull-right">
                     <button type="button" className="btn btn-primary btn-block" onClick={this.handleSubmit}>Submit</button>
                 </div>
-                <Grid data={this.state.gridData} />
+                <Grid data={this.state.gridData} onDelete={this.deleteEmployee}  />
             </div>
     },
     handleSubmit: function() {
-        this.setState({ gridData: this.state.gridData.concat([this.refs.employeeForm.getFormData()]) })
+        this.setState({ gridData: this.state.gridData.concat([this.refs.employeeForm.getFormData()]) });
+        this.refs.employeeForm.clearData();
+    },
+    edit: function(id) {
+        
+    },
+    deleteEmployee: function(component, event) {
+        console.log(component.props.data);
     }
 });
 
-React.render(<App  />, document.getElementById('employeeList'));
+React.render(<App />, document.getElementById('employeeList'));

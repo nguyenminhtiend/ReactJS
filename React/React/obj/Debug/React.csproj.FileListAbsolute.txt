@@ -4,3 +4,9 @@ D:\Working\Self Study\React\React\bin\React.pdb
 D:\Working\Self Study\React\React\obj\Debug\React.csprojResolveAssemblyReference.cache
 D:\Working\Self Study\React\React\obj\Debug\React.dll
 D:\Working\Self Study\React\React\obj\Debug\React.pdb
+D:\Working\Self Study\ReactJS\React\React\bin\React.dll.config
+D:\Working\Self Study\ReactJS\React\React\bin\React.dll
+D:\Working\Self Study\ReactJS\React\React\bin\React.pdb
+D:\Working\Self Study\ReactJS\React\React\obj\Debug\React.csprojResolveAssemblyReference.cache
+D:\Working\Self Study\ReactJS\React\React\obj\Debug\React.dll
+D:\Working\Self Study\ReactJS\React\React\obj\Debug\React.pdb
