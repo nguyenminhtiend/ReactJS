@@ -1,20 +1,23 @@
-﻿var employees = [{id: new Date().getTime(), name: 'Messi', department: 'IT', phone: '12345678'}];
+﻿var employees = [{id: new Date().getTime(), name: 'Messi', department: 'IT', phone: '12345678'},{id: new Date().getTime()+1, name: 'Messi', department: 'IT', phone: '12345678'}];
 
-var Cell = React.createClass({   
+var Cell = React.createClass({
     render: function () {
-        return <td>{this.props.data}</td>
+        return <td>{this.props.data}</td>;
     }
 });
 
-var CellAction = React.createClass({   
+var CellAction = React.createClass({
     render: function () {
-        return <td><button type="button" className="btn btn-danger btn-xs" onClick={this.props.onDelete(null, this)}>
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
+        return <td><button type="button" className="btn btn-danger btn-xs" onClick={this.onDelete}>
+            <span className="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
         </button></td>
+    },
+    onDelete: function () {
+        this.props.onDelete(this.props.data);
     }
 });
 
-var CellHeader = React.createClass({   
+var CellHeader = React.createClass({
     render: function () {
         return <th>{this.props.data}</th>
     }
@@ -26,8 +29,12 @@ var Row = React.createClass({
             <Cell data={this.props.data.name} />
             <Cell data={this.props.data.department} />
             <Cell data={this.props.data.phone} />
-            <CellAction data={this.props.data.id} onDelete={this.props.onDelete} />
+            <CellAction data={this.props.data.id} onDelete={this.onDelete} />
         </tr>);
+    },
+    onDelete: function (id) {
+        //alert(id);
+        this.props.onDelete(id);
     }
 });
 
@@ -54,9 +61,9 @@ var Grid = React.createClass({
         var header = (<HeaderTable data={dataHeader} />);
 
         var body =  (<tbody>{
-            this.props.data.map(function (rowData, index) {
-                return <Row key={index} data={rowData} onDelete={this.deleteEmployee} />;
-            })}</tbody>);
+                this.props.data.map(this.eachRow)
+              }
+            </tbody>);
 
         return (<div>
                     <table className="table table-striped table-hover table-bordered">
@@ -65,8 +72,11 @@ var Grid = React.createClass({
                 </div>
             );
     },
-    deleteEmployee: function(component, event) {
-        console.log(component.props.data);
+    eachRow: function(rowData, index){
+        return (<Row key={index} data={rowData} onDelete={this.onDelete} />);
+    },
+    onDelete: function (id) {
+        this.props.onDelete(id);
     }
 
 });
@@ -100,18 +110,19 @@ var EmloyeeForm = React.createClass({
         return {
             name: this.refs.name.getDOMNode().value,
             department: this.refs.department.getDOMNode().value,
-            phone: this.refs.phone.getDOMNode().value
+            phone: this.refs.phone.getDOMNode().value,
+            id: new Date().getTime()
         };
     },
     clearData: function() {
         this.refs.name.getDOMNode().value = '';
         this.refs.department.getDOMNode().value = '';
-        this.refs.phone.getDOMNode().value = '';    
+        this.refs.phone.getDOMNode().value = '';
     }
 
 });
 
-var App = React.createClass({   
+var App = React.createClass({
     getInitialState: function() {
         return {
             gridData: employees
@@ -123,7 +134,7 @@ var App = React.createClass({
                 <div className="pull-right">
                     <button type="button" className="btn btn-primary btn-block" onClick={this.handleSubmit}>Submit</button>
                 </div>
-                <Grid data={this.state.gridData} onDelete={this.deleteEmployee}  />
+                <Grid data={this.state.gridData} onDelete={this.deleteEmployee} />
             </div>
     },
     handleSubmit: function() {
@@ -131,11 +142,47 @@ var App = React.createClass({
         this.refs.employeeForm.clearData();
     },
     edit: function(id) {
-        
+
     },
-    deleteEmployee: function(component, event) {
-        console.log(component.props.data);
+    deleteEmployee: function(id) {
+      var listEmployees = this.state.gridData;
+      for (i in listEmployees) {
+            if (listEmployees[i].id == id) {
+                listEmployees.splice(i, 1);
+            }
+        }
+      this.setState({gridData: listEmployees});
     }
 });
 
-React.render(<App />, document.getElementById('employeeList'));
+var Table = React.createClass({
+    onDelete: function () {
+        alert('sss')
+    },
+    render: function () {
+        return  <table className="table table-striped table-hover table-bordered">
+                    <thead><tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr></thead>
+                    <tbody>
+                        {
+                        this.props.data.map(function (rowData, index) {
+                        return <tr key={index}>
+                            <td>{rowData.name}</td>
+                            <td>{rowData.department}</td>
+                            <td>{rowData.phone}</td>
+                            <td><button type="button" className="btn btn-danger btn-xs" onClick={this.onDelete}>
+                                <span className="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
+                            </button></td>
+                        </tr>
+                        })}
+                    </tbody>
+                </table>
+    }
+});
+
+
+React.render(<App ref="employeeApp" />, document.getElementById('employeeList'));
