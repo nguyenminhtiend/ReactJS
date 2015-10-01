@@ -1,4 +1,4 @@
-﻿var employees = [{id: new Date().getTime(), name: 'Messi', department: 'IT', phone: '12345678'},{id: new Date().getTime()+1, name: 'Messi', department: 'IT', phone: '12345678'}];
+﻿var employees = [{id: new Date().getTime(), name: 'Messi', department: 'IT', phone: '12345678'},{id: new Date().getTime()+1, name: 'Messi1', department: 'IT', phone: '12345678'}];
 
 var Cell = React.createClass({
     render: function () {
@@ -33,7 +33,6 @@ var Row = React.createClass({
         </tr>);
     },
     onDelete: function (id) {
-        //alert(id);
         this.props.onDelete(id);
     }
 });
