@@ -67,6 +67,11 @@ var EmployeeForm = React.createClass({
             id: new Date().getTime()
         };
     },
+    setEmployeeData: function(employee) {
+        this.refs.name.getDOMNode().value = employee.name;
+        this.refs.department.getDOMNode().value = employee.department;
+        this.refs.phone.getDOMNode().value = employee.phone;
+    },
     clearData: function() {
         this.refs.name.getDOMNode().value = '';
         this.refs.department.getDOMNode().value = '';
@@ -78,7 +83,8 @@ var EmployeeForm = React.createClass({
 var App = React.createClass({
     getInitialState: function() {
         return {
-            gridData: employees
+            gridData: employees,
+            emloyeeData: {}
         }
     },
     render: function () {
@@ -96,10 +102,10 @@ var App = React.createClass({
                 				</div>
                 			</div>
                 		</div>
-                		<Grid data={this.state.gridData} onDelete={this.deleteEmployee} />
+                		<Grid data={this.state.gridData} onDelete={this.edit} />
                 	</div>
                 	<div className="col-md-4">
-                	   <EmployeeForm ref="employeeForm" />
+                	   <EmployeeForm ref="employeeForm"/>
                 		   <div className="pull-right">
                 			   <button type="button" className="btn btn-primary btn-block" onClick={this.handleSubmit}>Save</button>
                 		   </div>
@@ -108,14 +114,19 @@ var App = React.createClass({
     },
     handleSubmit: function() {
         this.setState({ gridData: this.state.gridData.concat([this.refs.employeeForm.getFormData()]) });
-        this.refs.employeeForm.clearData();
+        this.refs.employeeForm.getFormData();
     },
     edit: function(id) {
-
+      var employees = this.state.gridData;
+      for (var i in this.state.gridData) {
+            if (employees[i].id == id) {
+              this.refs.employeeForm.setEmployeeData(employees[i]);
+            }
+        }
     },
     deleteEmployee: function(id) {
       var listEmployees = this.state.gridData;
-      for (i in listEmployees) {
+      for (var i in listEmployees) {
             if (listEmployees[i].id == id) {
                 listEmployees.splice(i, 1);
             }
