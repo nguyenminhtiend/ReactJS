@@ -51,7 +51,7 @@
     <None Include="js\react-component\employee.jsx" />
     <None Include="js\react-component\form-example.jsx" />
     <Content Include="js\bootstrap\bootstrap.min.js" />
-    <Content Include="js\react-component\employee.react.js" />
+    <None Include="js\react-component\employee.react.jsx" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
