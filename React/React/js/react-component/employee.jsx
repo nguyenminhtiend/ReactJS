@@ -45,9 +45,13 @@ var Grid = React.createClass({
 var EmployeeForm = React.createClass({
     render: function () {
         return <form>
-                  {this.renderTextInput('name', 'Name:')}
-                  {this.renderTextInput('department', 'Department:')}
-                  {this.renderTextInput('phone', 'Phone:')}
+                  {this.renderTextInput('name', 'Name:', this.props.data.name)}
+                  {this.renderTextInput('department', 'Department:', this.props.data.department)}
+                  {this.renderTextInput('phone', 'Phone:', this.props.data.phone)}
+                  <button type="button" className="btn btn-warning-outline btn-sm" onClick={this.handleSubmit}><i className="fa fa-ban"></i> Cancel</button>
+                  <button type="button" className="btn btn-success-outline btn-sm" onClick={this.props.onUpdate}><i className="fa fa-floppy-o"></i> Update</button>
+                  <button type="button" className="btn btn-danger-outline btn-sm" onClick={this.onDelete}><i className="fa fa-minus-circle"></i> Delete</button>
+                  <button type="button" className="btn btn-success-outline btn-sm" onClick={this.handleSubmit}><i className="fa fa-plus-circle"></i> Save</button>
               </form>
     },
     renderField: function(id, label, field) {
@@ -56,8 +60,17 @@ var EmployeeForm = React.createClass({
           {field}
       </fieldset>
     },
-    renderTextInput: function(id, label) {
-        return this.renderField(id, label, <input type="text" className="form-control" id={id} ref={id}/>)
+    renderTextInput: function(id, label, value, onChange) {
+        return this.renderField(id, label, <input type="text" className="form-control" onChange={this.onChange} value={value} id={id} ref={id}/>)
+    },
+    onChange: function(){
+        var employee = {
+            id: this.props.data.id,
+            name: this.refs.name.getDOMNode().value,
+            department: this.refs.department.getDOMNode().value,
+            phone: this.refs.phone.getDOMNode().value
+        };
+        this.props.onChange(employee);
     },
     getFormData: function() {
         return {
@@ -66,25 +79,14 @@ var EmployeeForm = React.createClass({
             phone: this.refs.phone.getDOMNode().value,
             id: new Date().getTime()
         };
-    },
-    setEmployeeData: function(employee) {
-        this.refs.name.getDOMNode().value = employee.name;
-        this.refs.department.getDOMNode().value = employee.department;
-        this.refs.phone.getDOMNode().value = employee.phone;
-    },
-    clearData: function() {
-        this.refs.name.getDOMNode().value = '';
-        this.refs.department.getDOMNode().value = '';
-        this.refs.phone.getDOMNode().value = '';
     }
-
 });
 
 var App = React.createClass({
     getInitialState: function() {
         return {
             gridData: employees,
-            emloyeeData: {}
+            employeeEdit: {}
         }
     },
     render: function () {
@@ -105,10 +107,9 @@ var App = React.createClass({
                 		<Grid data={this.state.gridData} onDelete={this.edit} />
                 	</div>
                 	<div className="col-md-4">
-                	   <EmployeeForm ref="employeeForm"/>
-                		   <div className="pull-right">
-                			   <button type="button" className="btn btn-primary btn-block" onClick={this.handleSubmit}>Save</button>
-                		   </div>
+                	   <EmployeeForm ref="employeeForm" data={this.state.employeeEdit}
+                      onChange={this.onFormChange} onUpdate={this.update}
+                      onDelete={this.delete}  />
                 	</div>
                 </div>
     },
@@ -118,17 +119,33 @@ var App = React.createClass({
     },
     edit: function(id) {
       var employees = this.state.gridData;
-      for (var i in this.state.gridData) {
+      for (var i in employees) {
             if (employees[i].id == id) {
-              this.refs.employeeForm.setEmployeeData(employees[i]);
+              this.setState({ employeeEdit: employees[i] });
+              break;
             }
         }
     },
-    deleteEmployee: function(id) {
+    update: function(){
+      var employees = this.state.gridData;
+      var employee = this.state.employeeEdit;
+      for (var i in employees) {
+            if (employees[i].id == employee.id) {
+              employees[i] = employee;
+              this.setState({ gridData: employees });
+              break;
+            }
+        }
+    },
+    onFormChange: function(employee){
+        this.setState({ employeeEdit: employee });
+    },
+    delete: function() {
       var listEmployees = this.state.gridData;
       for (var i in listEmployees) {
-            if (listEmployees[i].id == id) {
+            if (listEmployees[i].id == this.state.employeeEdit.id) {
                 listEmployees.splice(i, 1);
+                break;
             }
         }
       this.setState({gridData: listEmployees});
