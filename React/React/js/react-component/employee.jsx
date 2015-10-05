@@ -1,4 +1,4 @@
-﻿var employees = [{id: new Date().getTime(), name: 'Messi', departmentId: 1, department: 'IT', phone: '12345678'}];
+﻿var employees = [{id: new Date().getTime(), name: 'Messi11', departmentId: 1, department: 'IT', phone: '12345678'}];
 var departments = [{id: 1, name: 'IT'}, {id: 2, name: 'Sale'}, {id: 3, name: 'Consultant'}];
 
 var DataRow = React.createClass({
