@@ -1,4 +1,5 @@
-﻿var employees = [{id: new Date().getTime(), name: 'Messi', department: 'IT', phone: '12345678'},{id: new Date().getTime()+1, name: 'Messi1', department: 'IT', phone: '12345678'}];
+﻿var employees = [{id: new Date().getTime(), name: 'Messi', departmentId: 1, department: 'IT', phone: '12345678'}];
+var departments = [{id: 1, name: 'IT'}, {id: 2, name: 'Sale'}, {id: 3, name: 'Consultant'}];
 
 var DataRow = React.createClass({
     render: function () {
@@ -26,14 +27,14 @@ var Grid = React.createClass({
                         <th>Phone</th>
                         <th>Action</th>
                     </tr></thead>
-                    <tbody>{
-                            this.props.data.map(this.eachRow)
-                          }
-                        </tbody>
-                    </table>
+                    <tbody>
+                        {
+                          this.props.data.map(this.eachRow)
+                        }
+                    </tbody>
+                </table>
             );
     },
-
     eachRow: function(rowData, index){
         return (<DataRow key={index} data={rowData} onDelete={this.onDelete} />);
     },
@@ -46,39 +47,43 @@ var EmployeeForm = React.createClass({
     render: function () {
         return <form>
                   {this.renderTextInput('name', 'Name:', this.props.data.name)}
-                  {this.renderTextInput('department', 'Department:', this.props.data.department)}
+                  {this.renderSelect('department', 'Department:', this.props.data.departmentId, this.props.departments)}
                   {this.renderTextInput('phone', 'Phone:', this.props.data.phone)}
-                  <button type="button" className="btn btn-warning-outline btn-sm" onClick={this.handleSubmit}><i className="fa fa-ban"></i> Cancel</button>
-                  <button type="button" className="btn btn-success-outline btn-sm" onClick={this.props.onUpdate}><i className="fa fa-floppy-o"></i> Update</button>
-                  <button type="button" className="btn btn-danger-outline btn-sm" onClick={this.onDelete}><i className="fa fa-minus-circle"></i> Delete</button>
-                  <button type="button" className="btn btn-success-outline btn-sm" onClick={this.handleSubmit}><i className="fa fa-plus-circle"></i> Save</button>
+                  {this.props.data.id?<button type="button" className="btn btn-warning-outline btn-sm" onClick={this.props.onCancel}><i className="fa fa-ban"></i> Cancel</button>:null}
+                  {this.props.data.id?<button type="button" className="btn btn-success-outline btn-sm" onClick={this.props.onUpdate}><i className="fa fa-floppy-o"></i> Update</button>:null}
+                  {this.props.data.id?<button type="button" className="btn btn-danger-outline btn-sm" onClick={this.props.onDelete}><i className="fa fa-minus-circle"></i> Delete</button>:null}
+                  {this.props.data.id?null:<button type="button" className="btn btn-success-outline btn-sm" onClick={this.props.onCreate}><i className="fa fa-plus-circle"></i> Save</button>}
               </form>
     },
     renderField: function(id, label, field) {
       return <fieldset className="form-group">
-          <label htmlFor="{id}">{label}</label>
+          <label htmlFor={id}>{label}</label>
           {field}
       </fieldset>
     },
     renderTextInput: function(id, label, value, onChange) {
         return this.renderField(id, label, <input type="text" className="form-control" onChange={this.onChange} value={value} id={id} ref={id}/>)
     },
+    renderSelect: function(id, label, value, dataSource) {
+       var options = dataSource.map(function(item) {
+           return <option key={item.id} value={item.id}>{item.name}</option>
+       });
+       return this.renderField(id, label,
+         <select className="form-control" value={value} onChange={this.onChange} id={id} ref={id}>
+            <option></option>
+            {options}
+         </select>
+       )
+     },
     onChange: function(){
         var employee = {
             id: this.props.data.id,
             name: this.refs.name.getDOMNode().value,
-            department: this.refs.department.getDOMNode().value,
+            departmentId: this.refs.department.getDOMNode().value,
+            department: this.props.data.department,
             phone: this.refs.phone.getDOMNode().value
         };
         this.props.onChange(employee);
-    },
-    getFormData: function() {
-        return {
-            name: this.refs.name.getDOMNode().value,
-            department: this.refs.department.getDOMNode().value,
-            phone: this.refs.phone.getDOMNode().value,
-            id: new Date().getTime()
-        };
     }
 });
 
@@ -109,13 +114,17 @@ var App = React.createClass({
                 	<div className="col-md-4">
                 	   <EmployeeForm ref="employeeForm" data={this.state.employeeEdit}
                       onChange={this.onFormChange} onUpdate={this.update}
-                      onDelete={this.delete}  />
+                      onDelete={this.delete} onCreate={this.create}
+                      onCancel={this.cancel} departments={departments} />
                 	</div>
                 </div>
     },
-    handleSubmit: function() {
-        this.setState({ gridData: this.state.gridData.concat([this.refs.employeeForm.getFormData()]) });
-        this.refs.employeeForm.getFormData();
+    create: function(){
+      var employee = this.state.employeeEdit;
+      employee.id = new Date().getTime();
+      employee.department = this.getDepartmentName(employee.departmentId);
+      this.setState({ gridData: this.state.gridData.concat([employee]) });
+      this.setState({ employeeEdit: {} });
     },
     edit: function(id) {
       var employees = this.state.gridData;
@@ -133,11 +142,13 @@ var App = React.createClass({
             if (employees[i].id == employee.id) {
               employees[i] = employee;
               this.setState({ gridData: employees });
+              this.setState({ employeeEdit: {} });
               break;
             }
         }
     },
     onFormChange: function(employee){
+        employee.department = this.getDepartmentName(employee.departmentId);
         this.setState({ employeeEdit: employee });
     },
     delete: function() {
@@ -149,6 +160,17 @@ var App = React.createClass({
             }
         }
       this.setState({gridData: listEmployees});
+    },
+    cancel: function(){
+        this.setState({ employeeEdit: {} });
+    },
+    getDepartmentName: function(departmentId){
+      for (var i in departments) {
+            if (departments[i].id == departmentId) {
+                return departments[i].name;
+            }
+        }
+        return '';
     }
 });
 
