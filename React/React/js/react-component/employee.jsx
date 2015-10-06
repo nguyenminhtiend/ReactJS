@@ -17,7 +17,6 @@ var DataRow = React.createClass({
     }
 });
 
-
 var Grid = React.createClass({
     render: function () {
         return (<table className="table table table-striped table-hover top-space">
@@ -91,7 +90,11 @@ var App = React.createClass({
     getInitialState: function() {
         return {
             gridData: employees,
-            employeeEdit: {}
+            employeeEdit: {},
+            pageInfo: {
+                currentPage: 3,
+                totalPage: 6
+            }
         }
     },
     render: function () {
@@ -110,6 +113,7 @@ var App = React.createClass({
                 			</div>
                 		</div>
                 		<Grid data={this.state.gridData} onDelete={this.edit} />
+                    <Pagination totalPage={this.state.pageInfo.totalPage} currentPage={this.state.pageInfo.currentPage} pageChange={this.pageChange} />
                 	</div>
                 	<div className="col-md-4">
                 	   <EmployeeForm ref="employeeForm" data={this.state.employeeEdit}
@@ -171,6 +175,52 @@ var App = React.createClass({
             }
         }
         return '';
+    },
+    pageChange: function(page){
+        var pageInfo = this.state.pageInfo;
+        pageInfo.currentPage = page;
+        this.setState({ pageInfo: pageInfo });
+    }
+});
+
+var Pagination = React.createClass({
+    render: function () {
+        var pageItems = [];
+        for(var i = 1; i <= this.props.totalPage; i++){
+            if(i == this.props.currentPage){
+                pageItems.push(<Page key={i} isActive={true} page={i} />)
+            }else{
+                pageItems.push(<Page key={i} page={i} pageChange={this.pageChange} />)
+            }
+        }
+        return (<ul className="pagination pagination-sm">
+            {this.props.currentPage == 1 ? <li className="disabled"><a><i className="fa fa-step-backward"></i></a></li> : <li><a onClick={this.previousPage}><i className="fa fa-step-backward"></i></a></li>}
+            {pageItems}
+            {this.props.currentPage == this.props.totalPage ? <li className="disabled"><a><i className="fa fa-step-forward"></i></a></li> : <li><a onClick={this.nextPage}><i className="fa fa-step-forward"></i></a></li>}
+        </ul>);
+    },
+    pageChange: function(page){
+      this.props.pageChange(page);
+    },
+    nextPage: function(){
+        this.props.pageChange(this.props.currentPage + 1);
+    },
+    previousPage: function(){
+        this.props.pageChange(this.props.currentPage - 1);
+    }
+});
+
+var Page = React.createClass({
+    render: function () {
+      if(this.props.isActive){
+          return (<li className="active"><a>{this.props.page}</a></li>)
+      }
+      else{
+          return (<li><a onClick={this.onClick}>{this.props.page}</a></li>)
+      }
+    },
+    onClick: function(){
+      this.props.pageChange(this.props.page);
     }
 });
 
