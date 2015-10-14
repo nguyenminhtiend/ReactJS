@@ -1,6 +1,5 @@
-﻿var EmployeeConstant = require('./constants/employeeConstant.js');
-var Dispatcher = require('flux').Dispatcher;
-var AppDispatcher = new Dispatcher();
+﻿var EmployeeConstant = require('../constants/employeeConstant.js');
+var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 
 var EmployeeActions = {
     search: function (query) {
@@ -34,5 +33,4 @@ var EmployeeActions = {
     }
 };
 
-module.exports.EmployeeActions = EmployeeActions;
-module.exports.AppDispatcher = AppDispatcher;
+module.exports = EmployeeActions;

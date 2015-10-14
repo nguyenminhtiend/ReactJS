@@ -3,8 +3,8 @@ var departments = [{ id: 1, name: 'IT' }, { id: 2, name: 'Sale' }, { id: 3, name
 
 var $ = require('jquery');
 var EventEmitter = require('events').EventEmitter;
-var AppDispatcher = require('./actions/employeeAction.js').AppDispatcher;
-var EmployeeConstant = require('./constants/employeeConstant.js');
+var AppDispatcher = require('../dispatcher/AppDispatcher.js');
+var EmployeeConstant = require('../constants/employeeConstant.js');
 
 var state = {
     gridData: employees,
@@ -41,7 +41,7 @@ AppDispatcher.register(function (action) {
             EmployeeStore.emitChange();
             break;
         case EmployeeConstant.BOOK_SAVE:
-            _saveBook(action.book);
+            saveEmployee(action.employee);
             break;
         case EmployeeConstant.BOOK_DELETE:
             deleteEmployee(action.employeeId);
@@ -53,7 +53,7 @@ AppDispatcher.register(function (action) {
 var deleteEmployee = function(employeeId){
     var listEmployees = state.gridData;
     for (var i in listEmployees) {
-        if (listEmployees[i].id == action.employeeId) {
+        if (listEmployees[i].id == employeeId) {
             listEmployees.splice(i, 1);
             break;
         }
@@ -67,6 +67,7 @@ var saveEmployee = function(employee){
       var employees = state.gridData;
       for (var i in employees) {
           if (employees[i].id == employee.id) {
+              employee.department = getDepartmentName(employee.departmentId);
               employees[i] = employee;
               state.gridData = employees;
               break;

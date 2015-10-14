@@ -1,6 +1,6 @@
 var React = require('react');
-var EmployeeStore = require('./stores/employeeStore.js');
-var EmployeeActions = require('./actions/employeeAction.js').EmployeeActions;
+var EmployeeStore = require('../stores/employeeStore.js');
+var EmployeeActions = require('../actions/employeeAction.js');
 
 var DataRow = React.createClass({
     render: function () {
@@ -46,18 +46,18 @@ var EmployeeForm = React.createClass({
             data: {}
         };
     },
-    componentWillReceiveProps: function(data) {
-      this.setState({ data: data });
+    componentWillReceiveProps: function(props) {
+      this.setState({ data: props.employee });
     },
     render: function () {
         return <form>
                   {this.renderTextInput('name', 'Name:', this.state.data.name)}
                   {this.renderSelect('department', 'Department:', this.state.data.departmentId, this.props.departments)}
                   {this.renderTextInput('phone', 'Phone:', this.state.data.phone)}
-                  {this.props.data.id?<button type="button" className="btn btn-warning-outline btn-sm" onClick={this.onCancel}><i className="fa fa-ban"></i> Cancel</button>:null}
-                  {this.props.data.id?<button type="button" className="btn btn-success-outline btn-sm" onClick={this.onSave}><i className="fa fa-floppy-o"></i> Update</button>:null}
-                  {this.props.data.id?<button type="button" className="btn btn-danger-outline btn-sm" onClick={this.onDelete}><i className="fa fa-minus-circle"></i> Delete</button>:null}
-                  {this.props.data.id?null:<button type="button" className="btn btn-success-outline btn-sm" onClick={this.onSave}><i className="fa fa-plus-circle"></i> Save</button>}
+                  {this.state.data.id?<button type="button" className="btn btn-warning-outline btn-sm" onClick={this.onCancel}><i className="fa fa-ban"></i> Cancel</button>:null}
+                  {this.state.data.id?<button type="button" className="btn btn-success-outline btn-sm" onClick={this.onSave}><i className="fa fa-floppy-o"></i> Update</button>:null}
+                  {this.state.data.id?<button type="button" className="btn btn-danger-outline btn-sm" onClick={this.onDelete}><i className="fa fa-minus-circle"></i> Delete</button>:null}
+                  {this.state.data.id?null:<button type="button" className="btn btn-success-outline btn-sm" onClick={this.onSave}><i className="fa fa-plus-circle"></i> Save</button>}
               </form>
     },
     onCancel: function(){
@@ -67,7 +67,7 @@ var EmployeeForm = React.createClass({
         EmployeeActions.save(this.state.data);
     },
     onDelete: function(){
-        EmployeeActions.save(this.state.data.id);
+        EmployeeActions.delete(this.state.data.id);
     },
     renderField: function(id, label, field) {
         return <fieldset className="form-group">
@@ -121,7 +121,7 @@ var App = React.createClass({
                     <Pagination totalPage={this.state.pageInfo.totalPage} currentPage={this.state.pageInfo.currentPage} pageChange={this.pageChange} />
                 	</div>
                 	<div className="col-md-4">
-                	   <EmployeeForm departments={this.state.departments} />
+                	   <EmployeeForm employee={this.state.employee} departments={this.state.departments} />
                 </div>
             </div>
     },
