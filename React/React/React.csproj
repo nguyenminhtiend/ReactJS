@@ -50,8 +50,13 @@
     <None Include="js\react-component\todo-app.jsx" />
     <None Include="js\react-component\employee.jsx" />
     <None Include="js\react-component\form-example.jsx" />
+    <Content Include="js\actions\employeeAction.js" />
     <Content Include="js\bootstrap\bootstrap.min.js" />
     <None Include="js\react-component\employee.react.jsx" />
+    <Content Include="js\components\employee.js" />
+    <Content Include="js\constants\employeeConstant.js" />
+    <Content Include="js\main.js" />
+    <Content Include="js\stores\employeeStore.js" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -74,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
+    <Folder Include="js\dispatcher\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

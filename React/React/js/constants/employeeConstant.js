@@ -1,0 +1,7 @@
+﻿module.exports = {
+    BOOK_EDIT: 'BOOK_EDIT',
+    BOOK_CANCEL: 'BOOK_CANCEL',
+    BOOK_SAVE: 'BOOK_SAVE',
+    BOOK_SEARCH: 'BOOK_SEARCH',
+    BOOK_DELETE: 'BOOK_DELETE',
+};
