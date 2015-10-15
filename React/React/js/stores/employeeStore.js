@@ -1,10 +1,10 @@
 ﻿var employees = [{ id: new Date().getTime(), name: 'Messi11', departmentId: 1, department: 'IT', phone: '12345678' }];
 var departments = [{ id: 1, name: 'IT' }, { id: 2, name: 'Sale' }, { id: 3, name: 'Consultant' }];
 
-var $ = require('jquery');
+var objectAssign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
-var AppDispatcher = require('../dispatcher/AppDispatcher.js');
-var EmployeeConstant = require('../constants/employeeConstant.js');
+var AppDispatcher = require('../dispatcher/AppDispatcher');
+var EmployeeConstant = require('../constants/employeeConstant');
 
 var state = {
     gridData: employees,
@@ -16,7 +16,7 @@ var state = {
     }
 };
 
-var EmployeeStore = $.extend({}, EventEmitter.prototype, {
+var EmployeeStore = objectAssign({}, EventEmitter.prototype, {
     getState: function() {
         return state;
     },

@@ -1,5 +1,5 @@
-﻿var EmployeeConstant = require('../constants/employeeConstant.js');
-var AppDispatcher = require('../dispatcher/AppDispatcher.js');
+﻿var EmployeeConstant = require('../constants/employeeConstant');
+var AppDispatcher = require('../dispatcher/AppDispatcher');
 
 var EmployeeActions = {
     search: function (query) {
