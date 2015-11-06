@@ -57,6 +57,7 @@
     <Content Include="js\components\employee.js" />
     <Content Include="js\constants\employeeConstant.js" />
     <Content Include="js\main.js" />
+    <Content Include="js\services\http.js" />
     <Content Include="js\stores\employeeStore.js" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">

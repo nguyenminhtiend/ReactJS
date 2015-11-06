@@ -1,12 +1,18 @@
 ﻿var EmployeeConstant = require('../constants/employeeConstant');
 var AppDispatcher = require('../dispatcher/AppDispatcher');
+var http = require('../services/http');
 
 var EmployeeActions = {
     search: function (query) {
-        AppDispatcher.dispatch({
-            actionType: EmployeeConstant.BOOK_SEARCH,
-            query: query
-        });
+        http.get('/api/categories')
+            .then(function (categories) {
+
+                // Dispatch an action containing the categories.
+                AppDispatcher.dispatch({
+                    actionType: EmployeeConstant.BOOK_SEARCH,
+                    query: query
+                });
+            });
     },
     save: function (employee) {
         AppDispatcher.dispatch({
