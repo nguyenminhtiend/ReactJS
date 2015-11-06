@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,11 +48,11 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="js\react-component\index.jsx" />
     <None Include="js\react-component\todo-app.jsx" />
     <None Include="js\react-component\employee.jsx" />
     <None Include="js\react-component\form-example.jsx" />
     <Content Include="js\actions\employeeAction.js" />
-    <Content Include="js\bootstrap\bootstrap.min.js" />
     <None Include="js\react-component\employee.react.jsx" />
     <Content Include="js\components\employee.js" />
     <Content Include="js\constants\employeeConstant.js" />
@@ -67,11 +68,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
-    <Content Include="js\react\JSXTransformer-0.13.1.js" />
-    <Content Include="js\react\react-0.13.1.js" />
-    <Content Include="js\react\react-0.13.1.min.js" />
-    <Content Include="js\react\react-with-addons-0.13.1.js" />
-    <Content Include="js\react\react-with-addons-0.13.1.min.js" />
+    <Content Include="Scripts\react\JSXTransformer-0.13.1.js" />
+    <Content Include="Scripts\react\react-0.13.1.js" />
+    <Content Include="Scripts\react\react-0.13.1.min.js" />
+    <Content Include="Scripts\react\react-with-addons-0.13.1.js" />
+    <Content Include="Scripts\react\react-with-addons-0.13.1.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
